@@ -1,5 +1,3 @@
-// account.controller.ts
-
 import { Controller, Post, Get, Body, Param, Patch } from '@nestjs/common';
 import { AccountService } from './account.service';
 import { CreateAccountDTO, UpdateBalanceDTO } from './DTO';
