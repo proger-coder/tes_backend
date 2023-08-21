@@ -25,7 +25,7 @@ export class ClientController {
   async findOne(@Param('id') id: string): Promise<Client> {
     const client = await this.clientService.findOne(id);
     if (!client) {
-      throw new NotFoundException('Client not found');
+      throw new NotFoundException('Клиент не найден :[');
     }
     return client;
   }

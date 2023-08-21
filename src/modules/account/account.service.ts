@@ -19,7 +19,7 @@ export class AccountService {
       where: { id: accountId },
     });
     if (!account) {
-      throw new NotFoundException('Account not found');
+      throw new NotFoundException('Аккаунт не найден :[');
     }
     return account;
   }

@@ -16,7 +16,7 @@ export class ClientService {
       return await this.prisma.client.create({ data: createClientDto });
     } catch (error) {
       if (error.code === 'P2002') {
-        throw new ConflictException('Этот документ засвечен!');
+        throw new ConflictException('Этот документ засвечен! :[');
       }
       throw error;
     }
@@ -26,7 +26,7 @@ export class ClientService {
     const client = await this.prisma.client.findUnique({ where: { id } });
 
     if (!client) {
-      throw new NotFoundException(`Client with ID ${id} not found`);
+      throw new NotFoundException(`Клиент с таким id (${id}) не найден :[`);
     }
 
     return client;
