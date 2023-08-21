@@ -2,12 +2,13 @@
 
 import { Controller, Post, Get, Body, Param, Patch } from '@nestjs/common';
 import { AccountService } from './account.service';
-import { CreateAccountDTO, UpdateBalanceDTO, BlockAccountDTO } from './DTO';
+import { CreateAccountDTO, UpdateBalanceDTO } from './DTO';
 
 @Controller('account')
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
 
+  // Создание аккаунта
   @Post()
   create(@Body() createAccountDto: CreateAccountDTO) {
     return this.accountService.create(createAccountDto);
@@ -18,6 +19,7 @@ export class AccountController {
     return this.accountService.findAccountById(accountId);
   }
 
+  // Получить баланс
   @Get(':accountId/balance')
   async getBalance(
     @Param('accountId') accountId: string,
@@ -26,6 +28,7 @@ export class AccountController {
     return { balance };
   }
 
+  // Изменить баланс - пополнение или снятие. Пополнение > 0, снятие < 0
   @Patch(':accountId/balance')
   updateBalance(
     @Param('accountId') accountId: string,
@@ -34,11 +37,9 @@ export class AccountController {
     return this.accountService.updateBalance(accountId, updateBalanceDto);
   }
 
-  @Patch(':accountId/block')
-  blockAccount(
-    @Param('accountId') accountId: string,
-    @Body() blockAccountDto: BlockAccountDTO,
-  ) {
-    return this.accountService.blockAccount(accountId, blockAccountDto);
+  // Блокировка аккаунта
+  @Patch('block')
+  blockAccount(@Body('accountId') accountId) {
+    return this.accountService.blockAccount(accountId);
   }
 }

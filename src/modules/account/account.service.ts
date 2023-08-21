@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { CreateAccountDTO, UpdateBalanceDTO, BlockAccountDTO } from './DTO';
+import { CreateAccountDTO, UpdateBalanceDTO } from './DTO';
 
 // Создание аккаунта, пополнение счета, получение баланса, снятие денег, блокировка аккаунта
 
@@ -37,11 +37,11 @@ export class AccountService {
     });
   }
 
-  async blockAccount(accountId: string, blockData: BlockAccountDTO) {
+  async blockAccount(accountId: string) {
     await this.findAccountById(accountId); // проверка существования аккаунта
     return this.prisma.account.update({
       where: { id: accountId },
-      data: { active: blockData.active },
+      data: { active: false },
     });
   }
 }
