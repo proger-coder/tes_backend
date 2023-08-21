@@ -1,6 +1,6 @@
 import { IsUUID, IsBoolean } from 'class-validator';
 
-export class BlockAccountDto {
+export class BlockAccountDTO {
   @IsUUID()
   accountId: string;
 

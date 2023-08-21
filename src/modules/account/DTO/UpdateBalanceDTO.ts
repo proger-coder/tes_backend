@@ -1,6 +1,6 @@
 import { IsUUID, IsNumber, IsDecimal } from 'class-validator';
 
-export class UpdateBalanceDto {
+export class UpdateBalanceDTO {
   @IsUUID()
   accountId: string;
 

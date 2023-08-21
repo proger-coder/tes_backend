@@ -18,7 +18,7 @@ model Account {
   daily_withdrawal_limit Float                              // Ежедневный лимит на снятие средств
   active                 Boolean                            // Статус активности аккаунта (активный/заблокированный)
   accountType            Int                                // Тип аккаунта (можно расширить до enum для ясности)
-  createDate             DateTime                           // Дата создания аккаунта
+  createDate             DateTime       @default(now())     // Дата создания аккаунта
   transactions           Transaction[]                      // Список всех транзакций по этому аккаунту
   client                 Client        @relation(fields: [personId], references: [id])  // Референс на клиента владельца
 }
@@ -36,7 +36,7 @@ model Transaction {
 model Client {
   id        String    @id @default(uuid())                  // Уникальный id клиента
   name      String                                          // Полное имя клиента
-  document  String                                          // Документ, подтверждающий личность клиента (снилс, паспорт?)
+  document  String    @unique                               // Документ, подтверждающий личность клиента (снилс, паспорт?)
   birthDate DateTime                                        // Дата рождения клиента
   accounts  Account[]                                       // Список всех аккаунтов этого клиента
 }

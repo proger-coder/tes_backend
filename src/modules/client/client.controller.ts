@@ -17,7 +17,6 @@ export class ClientController {
 
   @Post()
   async create(@Body() clientData: CreateClientDto): Promise<Client> {
-    console.log(clientData);
     const fixedClientData = plainToInstance(CreateClientDto, clientData);
     return this.clientService.create(fixedClientData);
   }

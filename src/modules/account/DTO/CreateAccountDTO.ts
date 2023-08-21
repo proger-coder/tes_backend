@@ -4,10 +4,10 @@ import {
   IsBoolean,
   IsInt,
   IsDate,
-  IsDecimal,
+  IsDecimal, IsOptional,
 } from 'class-validator';
 
-export class CreateAccountDto {
+export class CreateAccountDTO {
   @IsUUID()
   personId: string;
 
@@ -25,6 +25,7 @@ export class CreateAccountDto {
   @IsInt()
   accountType: number;
 
+  @IsOptional()
   @IsDate()
-  createDate: Date;
+  createDate?: Date;
 }
