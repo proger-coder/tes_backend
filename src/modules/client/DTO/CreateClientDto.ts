@@ -1,4 +1,5 @@
 import { IsString, IsDate } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreateClientDto {
   @IsString()
@@ -7,6 +8,7 @@ export class CreateClientDto {
   @IsString()
   document: string;
 
+  @Transform(({ value }) => new Date(value)) //потом убрать часы или преобразовать в строку вообще
   @IsDate()
   birthDate: Date;
 }
