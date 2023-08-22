@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from 'nestjs-prisma';
 import { CreateAccountDTO, UpdateBalanceDTO } from './DTO';
 
@@ -31,7 +31,13 @@ export class AccountService {
 
   async updateBalance(updateData: UpdateBalanceDTO) {
     const accountId = updateData?.accountId;
-    await this.findAccountById(accountId); // проверка существования аккаунта
+    await this.findAccountById(accountId); // Проверка существования аккаунта
+
+    const currentBalance = await this.getBalance(accountId);
+    if (updateData.value < 0 && Math.abs(updateData.value) > currentBalance) {
+      throw new BadRequestException('Мало средств на счёте :[');
+    }
+
     return this.prisma.account.update({
       where: { id: accountId },
       data: { balance: { increment: updateData.value } },
