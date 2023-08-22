@@ -4,7 +4,8 @@ import {
   IsBoolean,
   IsInt,
   IsDate,
-  IsDecimal, IsOptional,
+  IsDecimal,
+  IsOptional,
 } from 'class-validator';
 
 export class CreateAccountDTO {

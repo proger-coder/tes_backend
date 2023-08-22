@@ -29,7 +29,8 @@ export class AccountService {
     return account.balance;
   }
 
-  async updateBalance(accountId: string, updateData: UpdateBalanceDTO) {
+  async updateBalance(updateData: UpdateBalanceDTO) {
+    const accountId = updateData?.accountId;
     await this.findAccountById(accountId); // проверка существования аккаунта
     return this.prisma.account.update({
       where: { id: accountId },

@@ -17,12 +17,13 @@ export class AccountController {
     return this.accountService.create(createAccountDto);
   }
 
+  // Получить полную информацию об аккаунте
   @Get(':accountId')
   findOne(@Param('accountId') accountId: string) {
     return this.accountService.findAccountById(accountId);
   }
 
-  // Получить баланс
+  // Получить баланс на аккаунте
   @Get(':accountId/balance')
   async getBalance(
     @Param('accountId') accountId: string,
@@ -31,21 +32,18 @@ export class AccountController {
     return { balance };
   }
 
-  // Изменить баланс - пополнение или снятие. Пополнение > 0, снятие < 0. Заодно пишем в историю транзакций
-  @Patch(':accountId/balance')
-  async updateBalance(
-    @Param('accountId') accountId: string,
-    @Body() updateBalanceDto: UpdateBalanceDTO,
-  ) {
+  // Изменить баланс - пополнение или снятие.
+  // Пополнение > 0, снятие < 0. Заодно пишем в историю транзакций
+  @Patch('balance')
+  async updateBalance(@Body() updateBalanceDto: UpdateBalanceDTO) {
     // Обновляем баланс аккаунта
     const updatedAccount = await this.accountService.updateBalance(
-      accountId,
       updateBalanceDto,
     );
 
     // Создаем запись о транзакции
     const transactionDto: TransactionDTO = {
-      accountId: accountId,
+      accountId: updateBalanceDto?.accountId,
       value: updateBalanceDto.value,
       transactionDate: new Date(),
     };
