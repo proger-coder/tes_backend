@@ -1,8 +1,13 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { AccountModule } from './modules/account/account.module';
 import { ClientModule } from './modules/client/client.module';
 import { TransactionModule } from './modules/transaction/transaction.module';
-import { RateLimitMiddleware } from './middlewares/rate-limit.middleware';
+import { RateLimiterMiddleware } from './middlewares/rate-limit.middleware';
 
 @Module({
   imports: [AccountModule, ClientModule, TransactionModule],
@@ -14,7 +19,12 @@ import { RateLimitMiddleware } from './middlewares/rate-limit.middleware';
   ],
 })
 export class AppModule implements NestModule {
+  // используем RateLimiterMiddleware для ограничения кол-ва запросов на получение текущего счёта в день
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(RateLimitMiddleware).forRoutes('account');
+    consumer.apply(RateLimiterMiddleware).forRoutes(
+      // только для GET-запросов на эндпоинты:
+      { path: 'account/:accountId', method: RequestMethod.GET },
+      { path: 'account/:accountId/balance', method: RequestMethod.GET },
+    );
   }
 }
