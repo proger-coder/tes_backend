@@ -1,14 +1,26 @@
-import { Controller, Post, Get, Body, Param, Patch } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  Param,
+  Patch,
+  UseGuards,
+  Delete,
+} from '@nestjs/common';
 import { AccountService } from './account.service';
 import { CreateAccountDTO, UpdateBalanceDTO } from './DTO';
 import { TransactionDTO } from '../transaction/DTO/TransactionDTO';
 import { TransactionService } from '../transaction/transaction.service';
+import { IpWhitelistGuard } from '../../guards/ip-whitelist.guard';
+import { IpWhitelistService } from '../../services/ip-whitelist.service';
 
 @Controller('account')
 export class AccountController {
   constructor(
     private readonly accountService: AccountService,
     private readonly transactionService: TransactionService,
+    private readonly ipWhitelistService: IpWhitelistService,
   ) {}
 
   // Создание аккаунта
@@ -25,6 +37,7 @@ export class AccountController {
 
   // Получить баланс на аккаунте
   @Get(':accountId/balance')
+  @UseGuards(IpWhitelistGuard)
   async getBalance(
     @Param('accountId') accountId: string,
   ): Promise<{ balance: number }> {
@@ -56,5 +69,19 @@ export class AccountController {
   @Patch('block')
   blockAccount(@Body('accountId') accountId) {
     return this.accountService.blockAccount(accountId);
+  }
+
+  // добавить ip в белый список
+  @Post('whitelist')
+  addToWhitelist(@Body() data: { ip: string }) {
+    this.ipWhitelistService.add(data.ip);
+    return { message: 'IP добавлен в белый список :]' };
+  }
+
+  // удалить ip из белого списка
+  @Delete('whitelist')
+  removeFromWhitelist(@Body() data: { ip: string }) {
+    this.ipWhitelistService.remove(data.ip);
+    return { message: 'IP удалён из белого списка :]' };
   }
 }

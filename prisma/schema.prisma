@@ -40,3 +40,8 @@ model Client {
   birthDate DateTime                                        // Дата рождения клиента
   accounts  Account[]                                       // Список всех аккаунтов этого клиента
 }
+
+// хранить белый список айпишников
+model IpWhitelist {
+    ip_address String @id @map("ip_address")
+}
