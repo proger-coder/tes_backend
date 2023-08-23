@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from 'nestjs-prisma';
 import { CreateAccountDTO, UpdateBalanceDTO } from './DTO';
 
@@ -29,9 +29,20 @@ export class AccountService {
     return account.balance;
   }
 
+  async checkIfBlocked(accountId: string): Promise<boolean> {
+    const account = await this.findAccountById(accountId);
+    return account.active;
+  }
+
+  // Изменить баланс, если аккаунт не заблокирован
   async updateBalance(updateData: UpdateBalanceDTO) {
     const accountId = updateData?.accountId;
     await this.findAccountById(accountId); // Проверка существования аккаунта
+
+    const active = await this.checkIfBlocked(accountId);
+    if (!active) {
+      throw new ForbiddenException('Аккаунт заблокирован :[');
+    }
 
     const currentBalance = await this.getBalance(accountId);
     if (updateData.value < 0 && Math.abs(updateData.value) > currentBalance) {
