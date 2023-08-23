@@ -1,7 +1,5 @@
 ---
-
-![Banking Management](https://novyjgod.com/wp-content/uploads/2023/02/internet-banking-1.png)
-
+![Banking Management](https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgm7raARmssEHRY9ibFbKBT8pfYDoxFK3rldwNGDwT35m1URa3cXhZaxRIVfCWcZZs51lhjdJci7iANFIQ1A-whO4IcXKbqkiBtlJd5dvEn2Diq4Bw_bnGo5p6az8-XsZ5nJ6D84IEIGvRyLQqsQUxoz2s_SQ5WLLFskUeljAVOr8niwX4iKdP0Ahpl/s16000/Clipboard01.jpg)
 # Управление банковским аккаунтом
 
 📜 **[Задание](https://github.com/proger-coder/tes_backend/blob/master/taskDescription.md)**: для детального описания задачи, смотрите данную ссылку.
