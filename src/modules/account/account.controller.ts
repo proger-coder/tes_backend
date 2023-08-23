@@ -14,7 +14,9 @@ import { TransactionDTO } from '../transaction/DTO/TransactionDTO';
 import { TransactionService } from '../transaction/transaction.service';
 import { IpWhitelistGuard } from '../../guards/ip-whitelist.guard';
 import { IpWhitelistService } from '../../services/ip-whitelist.service';
+import { ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 
+@ApiTags('account')
 @Controller('account')
 export class AccountController {
   constructor(
@@ -24,18 +26,16 @@ export class AccountController {
   ) {}
 
   // Создание аккаунта
+  @ApiOperation({ summary: 'Создание аккаунта' })
+  @ApiResponse({ status: 201, description: 'Аккаунт успешно создан.' })
   @Post()
   create(@Body() createAccountDto: CreateAccountDTO) {
     return this.accountService.create(createAccountDto);
   }
 
-  // Получить полную информацию об аккаунте
-  @Get(':accountId')
-  findOne(@Param('accountId') accountId: string) {
-    return this.accountService.findAccountById(accountId);
-  }
-
   // Получить баланс на аккаунте
+  @ApiOperation({ summary: 'Получение баланса на аккаунте' })
+  @ApiParam({ name: 'accountId', description: 'ID аккаунта' })
   @Get(':accountId/balance')
   @UseGuards(IpWhitelistGuard)
   async getBalance(
@@ -47,6 +47,11 @@ export class AccountController {
 
   // Изменить баланс - пополнение или снятие.
   // Пополнение > 0, снятие < 0. Заодно пишем в историю транзакций
+  @ApiOperation({ summary: 'Изменение баланса' })
+  @ApiBody({
+    description: 'Данные для изменения баланса',
+    type: UpdateBalanceDTO,
+  })
   @Patch('balance')
   async updateBalance(@Body() updateBalanceDto: UpdateBalanceDTO) {
     // Обновляем баланс аккаунта
@@ -66,12 +71,16 @@ export class AccountController {
   }
 
   // Блокировка аккаунта
+  @ApiOperation({ summary: 'Блокировка аккаунта' })
+  @ApiBody({ description: 'ID аккаунта', type: String })
   @Patch('block')
   blockAccount(@Body('accountId') accountId) {
     return this.accountService.blockAccount(accountId);
   }
 
   // добавить ip в белый список
+  @ApiOperation({ summary: 'Добавить IP в белый список' })
+  @ApiBody({ description: 'IP-адрес', type: String })
   @Post('whitelist')
   addToWhitelist(@Body() data: { ip: string }) {
     this.ipWhitelistService.add(data.ip);
@@ -79,9 +88,19 @@ export class AccountController {
   }
 
   // удалить ip из белого списка
+  @ApiOperation({ summary: 'Удалить IP из белого списка' })
+  @ApiBody({ description: 'IP-адрес', type: String })
   @Delete('whitelist')
   removeFromWhitelist(@Body() data: { ip: string }) {
     this.ipWhitelistService.remove(data.ip);
     return { message: 'IP удалён из белого списка :]' };
+  }
+
+  // Получить полную информацию об аккаунте
+  @ApiOperation({ summary: 'Получение информации об аккаунте' })
+  @ApiParam({ name: 'accountId', description: 'ID аккаунта' })
+  @Get(':accountId')
+  findOne(@Param('accountId') accountId: string) {
+    return this.accountService.findAccountById(accountId);
   }
 }

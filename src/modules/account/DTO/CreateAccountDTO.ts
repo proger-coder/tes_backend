@@ -26,7 +26,7 @@ export class CreateAccountDTO {
   @IsDecimal() //проверка, что оно десятичное
   daily_withdrawal_limit: number;
 
-  @ApiProperty({ description: 'Статус активации аккаунта' })
+  @ApiProperty({ description: 'Статус активности аккаунта' })
   @IsBoolean()
   active: boolean;
 
