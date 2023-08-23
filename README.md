@@ -17,6 +17,10 @@
 
 Для детального описания задачи, смотрите [задание](https://github.com/proger-coder/tes_backend/blob/master/taskDescription.md).
 
+## Сервер
+
+Приложение запущено на сервере по адресу [http://193.17.92.118:2024](http://193.17.92.118:2024).
+
 ## Репозиторий
 
 Весь код и связанные файлы находятся в [этом репозитории](https://github.com/proger-coder/tes_backend).
