@@ -8,12 +8,11 @@ import { AccountModule } from './modules/account/account.module';
 import { ClientModule } from './modules/client/client.module';
 import { TransactionModule } from './modules/transaction/transaction.module';
 import { RateLimiterMiddleware } from './middlewares/rate-limit.middleware';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [AccountModule, ClientModule, TransactionModule],
-  controllers: [
-    /*AppController*/
-  ],
+  controllers: [AppController],
   providers: [
     /*AppService*/
   ],

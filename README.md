@@ -19,7 +19,7 @@
 
 ## Репозиторий
 
-Весь код и связанные файлы находятся в [репозитории задания](https://github.com/proger-coder/tes_backend).
+Весь код и связанные файлы находятся в [этом репозитории](https://github.com/proger-coder/tes_backend).
 
 ## Автор
 
