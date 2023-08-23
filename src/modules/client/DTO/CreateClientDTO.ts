@@ -2,7 +2,7 @@ import { IsString, IsDate } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateClientDto {
+export class CreateClientDTO {
   @ApiProperty({ description: 'Имя клиента' })
   @IsString()
   name: string;

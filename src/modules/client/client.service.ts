@@ -5,13 +5,13 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { Client } from '@prisma/client';
-import { CreateClientDto } from './DTO/CreateClientDto';
+import { CreateClientDTO } from './DTO/CreateClientDTO';
 
 @Injectable()
 export class ClientService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createClientDto: CreateClientDto): Promise<Client> {
+  async create(createClientDto: CreateClientDTO): Promise<Client> {
     try {
       return await this.prisma.client.create({ data: createClientDto });
     } catch (error) {

@@ -7,7 +7,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ClientService } from './client.service';
-import { CreateClientDto } from './dto/CreateClientDto';
+import { CreateClientDTO } from './DTO/CreateClientDTO';
 import { Client } from '@prisma/client';
 import { plainToInstance } from 'class-transformer';
 import {
@@ -24,12 +24,12 @@ export class ClientController {
   constructor(private readonly clientService: ClientService) {}
 
   @ApiOperation({ summary: 'Создание клиента' })
-  @ApiBody({ description: 'Данные клиента', type: CreateClientDto })
+  @ApiBody({ description: 'Данные клиента', type: CreateClientDTO })
   @ApiResponse({ status: 201, description: 'Клиент успешно создан.' })
   @ApiResponse({ status: 400, description: 'Неверный запрос.' })
   @Post()
-  async create(@Body() clientData: CreateClientDto): Promise<Client> {
-    const fixedClientData = plainToInstance(CreateClientDto, clientData);
+  async create(@Body() clientData: CreateClientDTO): Promise<Client> {
+    const fixedClientData = plainToInstance(CreateClientDTO, clientData);
     return this.clientService.create(fixedClientData);
   }
 
