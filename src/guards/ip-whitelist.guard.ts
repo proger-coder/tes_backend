@@ -10,10 +10,4 @@ export class IpWhitelistGuard implements CanActivate {
     const clientIp = request.ip;
     return this.ipWhitelistService.check(clientIp);
   }
-
-  // canActivate(context: ExecutionContext): boolean {
-  //   const request = context.switchToHttp().getRequest();
-  //   const clientIp = request.ip;
-  //   return this.whitelist.includes(clientIp);
-  // }
 }
