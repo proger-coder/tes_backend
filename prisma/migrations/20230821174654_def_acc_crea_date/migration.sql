@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Account" ALTER COLUMN "createDate" SET DEFAULT CURRENT_TIMESTAMP;

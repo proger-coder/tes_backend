@@ -9,4 +9,4 @@ ALTER TABLE "Account" ALTER COLUMN "active" SET DEFAULT true,
 ALTER COLUMN "createDate" SET DEFAULT CURRENT_TIMESTAMP;
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Client_document_key" ON "Client"("document");
+--CREATE UNIQUE INDEX "Client_document_key" ON "Client"("document");
