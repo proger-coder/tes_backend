@@ -14,6 +14,8 @@ export class AppController {
   })
   async getReadme(): Promise<string> {
     const readmeContent = await fs.readFile('README.md', 'utf-8');
-    return marked(readmeContent);
+    const addon =
+      '<h3 style="color:green"> Вы зашли на запущенный сервер </h3>';
+    return addon + marked(readmeContent);
   }
 }

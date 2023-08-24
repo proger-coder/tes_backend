@@ -26,4 +26,4 @@ RUN npx prisma generate
 RUN npm run build
 
 # Запуск приложения
-CMD [ "npm", "run", "start" ]
+CMD [ "npm", "run", "start:prod" ]
