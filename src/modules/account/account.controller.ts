@@ -37,7 +37,6 @@ export class AccountController {
   @ApiOperation({ summary: 'Получение баланса на аккаунте' })
   @ApiParam({ name: 'accountId', description: 'ID аккаунта' })
   @Get(':accountId/balance')
-  @UseGuards(IpWhitelistGuard)
   async getBalance(
     @Param('accountId') accountId: string,
   ): Promise<{ balance: number }> {

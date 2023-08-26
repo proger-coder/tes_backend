@@ -19,6 +19,14 @@ describe('AppController (e2e)', () => {
     return request(app.getHttpServer())
       .get('/')
       .expect(200)
-      .expect('Hello World!');
+      .expect((res) => {
+        if (
+          !res.text.startsWith(
+            '<h3 style="color:green"> Вы зашли на запущенный сервер </h3><hr>',
+          )
+        ) {
+          throw new Error('Unexpected response');
+        }
+      });
   });
 });
