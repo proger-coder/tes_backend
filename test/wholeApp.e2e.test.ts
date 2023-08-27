@@ -8,10 +8,13 @@ import { TransactionModule } from "../src/modules/transaction/transaction.module
 import { CreateAccountDTO, UpdateBalanceDTO } from "../src/modules/account/DTO";
 import { TransactionDTO } from "../src/modules/transaction/DTO/TransactionDTO";
 import { AppModule } from "../src/app.module";
+import { execSync } from "child_process";
 
 // тестируем всё приложение от создания клиента
 describe('e2e flow: весь бекенд', () => {
   let app: INestApplication;
+  process.env.DATABASE_URL = process.env.TEST_DATABASE_URL;
+  execSync('npx prisma db seed');
 
   // тестовые данные
   const testClientCreds:CreateClientDTO = {
