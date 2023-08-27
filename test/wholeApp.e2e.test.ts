@@ -5,7 +5,7 @@ import { CreateClientDTO } from "../src/modules/client/DTO/CreateClientDTO";
 import { AccountModule } from "../src/modules/account/account.module";
 import { ClientModule } from "../src/modules/client/client.module";
 import { TransactionModule } from "../src/modules/transaction/transaction.module";
-import { CreateAccountDTO } from "../src/modules/account/DTO";
+import { CreateAccountDTO, UpdateBalanceDTO } from "../src/modules/account/DTO";
 import { TransactionDTO } from "../src/modules/transaction/DTO/TransactionDTO";
 import { AppModule } from "../src/app.module";
 
@@ -38,15 +38,25 @@ describe('e2e flow: весь бекенд', () => {
   };
   let testAccountToBlockId: string;
 
+  const testUpdateBalanceDepo:UpdateBalanceDTO = {
+    accountId: "не-был-установлен",
+    value: 100
+  }
+
+  const testUpdateBalanceWithdrawal:UpdateBalanceDTO = {
+    accountId: "не-был-установлен",
+    value: -1000
+  }
+
   const testTransactionDeposit:TransactionDTO = {
-    accountId: "",
-    value: 100,
+    accountId: "не-был-установлен",
+    value: 0,
     transactionDate: new Date()
   }
 
   const testTransactionWithdrawal:TransactionDTO = {
-    accountId: "",
-    value: -50,
+    accountId: "не-был-установлен",
+    value: 0,
     transactionDate: new Date()
   }
 
@@ -93,6 +103,8 @@ describe('e2e flow: весь бекенд', () => {
     const { id, balance } = response.body;
     expect(balance).toBe(testAccountCreds.balance);
     testAccountId = id;
+    console.log(`testAccountId = `, testAccountId);
+    console.log(`testUpdateBalanceDepo = `, testUpdateBalanceDepo);
   })
 
   /** создание аккаунта под блокировку */
@@ -128,4 +140,87 @@ describe('e2e flow: весь бекенд', () => {
     expect(response.body.balance).toBe(testAccountCreds.balance);
   });
 
+  /** накинуть денег на аккаунт */
+  it('/account (PATCH)', async () => {
+    testUpdateBalanceDepo.accountId = testAccountId;
+
+    const response = await request(app.getHttpServer())
+      .patch(`/account/balance`)
+      .send(testUpdateBalanceDepo)
+      .expect(200);
+
+    expect(response.body.balance).toBe(testAccountCreds.balance + testUpdateBalanceDepo.value);
+
+    testTransactionDeposit.accountId = testAccountId;
+    testTransactionDeposit.value = testUpdateBalanceDepo.value;
+  })
+
+  /** проверить, что транзакция записалась автоматически */
+  it('/transaction/history (GET)', async () => {
+    const response = await request(app.getHttpServer())
+      .get(`/transaction/history/${testAccountId}`)
+      .expect(200);
+
+    expect(response.body).toBeInstanceOf(Array);
+    expect(response.body[0].accountId).toBe(testAccountId);
+    console.log('transaction history', response.body);
+  })
+
+  /** записать транзакцию вручную */
+  it('/transaction (POST)', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/transaction')
+      .send(testTransactionDeposit)
+      .expect(201);
+
+    expect(response.body.accountId).toBe(testAccountId);
+    expect(response.body.value).toBe(testTransactionDeposit.value);
+  })
+
+  /** снять больше денег, чем есть на аккаунте */
+  it('/account (PATCH)', async () => {
+    testUpdateBalanceWithdrawal.accountId = testAccountId;
+
+    const response = await request(app.getHttpServer())
+      .patch(`/account/balance`)
+      .send(testUpdateBalanceWithdrawal)
+      .expect(400);
+  })
+
+  /** заблокировать аккаунт */
+  it('/account/block (PATCH)', async () => {
+    const response = await request(app.getHttpServer())
+      .patch('/account/block')
+      .send({accountId:testAccountToBlockId})
+      .expect(200);
+
+    const {active} = response.body;
+    expect(active).toBeFalsy()
+  })
+
+  /** снять деньги с заблокированного аккаунта */
+  it('/account (PATCH)', async () => {
+    testUpdateBalanceWithdrawal.accountId = testAccountToBlockId;
+
+    const response = await request(app.getHttpServer())
+      .patch(`/account/balance`)
+      .send(testUpdateBalanceWithdrawal)
+      .expect(403);
+  })
+
+  /** добавить IP в белый список */
+  it('/account/whitelist (POST)', async () => {
+    const response = await request(app.getHttpServer())
+      .post('/account/whitelist')
+      .send({ip: newWhiteIP})
+      .expect(201);
+  })
+
+  /** удолить IP из белава списка */
+  it('/account/whitelist (DELETE)', async () => {
+    const response = await request(app.getHttpServer())
+      .delete('/account/whitelist')
+      .send({ip: newWhiteIP})
+      .expect(200);
+  })
 });
