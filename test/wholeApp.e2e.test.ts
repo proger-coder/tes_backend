@@ -9,12 +9,26 @@ import { CreateAccountDTO, UpdateBalanceDTO } from "../src/modules/account/DTO";
 import { TransactionDTO } from "../src/modules/transaction/DTO/TransactionDTO";
 import { AppModule } from "../src/app.module";
 import { execSync } from "child_process";
+process.env.DATABASE_URL = process.env.TEST_DATABASE_URL;
+import { PrismaClient} from "@prisma/client";
+const prisma = new PrismaClient();
 
 // тестируем всё приложение от создания клиента
 describe('e2e flow: весь бекенд', () => {
   let app: INestApplication;
-  process.env.DATABASE_URL = process.env.TEST_DATABASE_URL;
-  execSync('npx prisma db seed');
+
+  beforeAll(async () => {
+    // очищаем нужные таблицы, учтя порядок зависимостей (foreign keys)
+    await prisma.transaction.deleteMany();
+    await prisma.account.deleteMany();
+    await prisma.client.deleteMany();
+
+    // запускаем миграции и посев
+    execSync('echo Y | npx prisma migrate deploy', { stdio: 'inherit' });
+    execSync('npx prisma db seed');
+
+    await prisma.$disconnect(); // Закрыть соединение с базой данных
+  }, 10000);
 
   // тестовые данные
   const testClientCreds:CreateClientDTO = {
